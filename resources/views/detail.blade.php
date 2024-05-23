@@ -93,7 +93,7 @@
     }
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQaTJ1VKvfQI82Fa3Vp5Rb4-10wAgZ6Po&callback=myMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=myMap"></script>
 
 </body>
 @endsection

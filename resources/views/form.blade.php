@@ -18,7 +18,6 @@
     </div>
     <input type="text" class="form-control" id="longitude" name="longitude" value="" hidden>
     <input type="text" class="form-control" id="latitude" name="latitude" value="" hidden>
-    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
   </div>
   <div id="submit" class="btn btn-primary">Submit</div>
 </form>
