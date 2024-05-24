@@ -6,10 +6,26 @@
     <div class="col-md-6">
         <div class="row mb-3">
             <div class="col-md-4">
+                Detail Alamat
+            </div>
+            <div class="col-md-6">
+                <textarea name="" class="form-control" id="" style="height: 100px" readonly>{{strtoupper($detail)}}, {{$village->name}}, {{$district->name}}, {{$city->name}}, {{$province->name}}</textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                Link maps
+            </div>
+            <div class="col-md-6">
+                <a href="https://www.google.com/maps/dir/Current+Location/{{$latitude}},{{$longitude}}">Klik untuk Detail Lokasinya</a>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
                 Total Jasa
             </div>
             <div class="col-md-6">
-                : {{$total_jasa}}
+                : Rp. {{ number_format($total_jasa, 2, ',', '.')}}
             </div>
         </div>
         <div class="row mb-5">
@@ -32,7 +48,7 @@
     <div class="col-md-3">
     </div>
 </div>
-<div id="googleMap" style="width:100%;height:400px;"></div>
+<div id="map" style="width:100%;height:400px;"></div>
 @endsection
 @section('custom_js')
 <script>
@@ -42,23 +58,33 @@
         { lat: -7.559122, lng: 110.7776122 }
     ]
     $(document).ready(function(){
-        // myMap();
+        myMap();
     })
     function myMap() {
-        var mapProp= {
-        center:new google.maps.LatLng(<?= $latitude ?>,<?= $longitude ?>),
-        zoom:7,
-        };
-        map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-        for (let i = 0; i< markers.length; i++) {
-            addMarker(markers[i])
-        }
-        // setPolyline();
+        map = L.map('map').setView([110.7776122, -7.559122], 14);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        
+        
+        var latlngs = [
+            [markers[0]['lat'], markers[0]['lng']],
+            [markers[1]['lat'], markers[1]['lng']]
+        ];
+        marker = L.marker([markers[1]['lat'], markers[1]['lng']]).addTo(map);
+        marker = L.marker([markers[0]['lat'], markers[0]['lng']]).addTo(map)
+        .bindPopup("{{strtoupper($detail)}}, {{$village->name}}, {{$district->name}}, {{$city->name}}, {{$province->name}}")
+        .openPopup();
+
+        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+        map.fitBounds(polyline.getBounds());
+
         const getKilo = haversine_distance();
         const totalKilo = Math.round(getKilo) * 10000;
         const totalAll = totalKilo + parseInt(<?= $total_jasa ?>)
         $('#total_jarak').html(`: ${totalKilo}`);
-        $('#total').html(`: ${totalAll}`);
+        $('#total').html(`: ${totalAll.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`);
 
     }
 
@@ -92,8 +118,6 @@
       return d;
     }
 </script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=myMap"></script>
 
 </body>
 @endsection

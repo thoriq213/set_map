@@ -19,3 +19,6 @@ Route::get('/', function () {
 });
 Route::get('/form', [TransactionController::class, 'form']);
 Route::post('/transaction_detail', [TransactionController::class, 'transaction']);
+Route::post('/get_city', [TransactionController::class, 'get_city']);
+Route::post('/get_district', [TransactionController::class, 'get_district']);
+Route::post('/get_village', [TransactionController::class, 'get_village']);
